@@ -52,17 +52,17 @@ static float* on_dataset_sample(float* inputs)
       switch (index)
       {
       case 0:
-        Serial.println("0: No Failure");
+        //Serial.println("0: No Failure");
         digitalWrite(LED_GREEN, HIGH);
         break;
       
       case 1:
-        Serial.println("1: APS Failure Detected");
+        //Serial.println("1: APS Failure Detected");
         digitalWrite(LED_RED, HIGH);
         break;
       
       case 2:
-        Serial.println("2: Unknown");
+        //Serial.println("2: Unknown");
         digitalWrite(LED_BLUE, HIGH);
         break;
       
