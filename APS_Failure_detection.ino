@@ -5,6 +5,13 @@ static uint8_t init_failed;
 static app_callbacks_t callbacks = { 0 };
 uint64_t min_time = UINT64_MAX, max_time = 0, avg_time = 0;
 
+enum Arduino_GPIO_Pins
+{
+    LED_RED = 3,
+    LED_BLUE = 4,
+    LED_GREEN = 2,
+};
+
 static void send_data(void* data, size_t size)
 {
   Serial.write((const char*) data, size);
@@ -37,19 +44,26 @@ static float* on_dataset_sample(float* inputs)
       {
         avg_time = (avg_time * nInferences + inference_time) / (nInferences + 1);
       }
+
+      digitalWrite(LED_RED, LOW);
+      digitalWrite(LED_BLUE, LOW);
+      digitalWrite(LED_GREEN, LOW);
   
       switch (index)
       {
       case 0:
         Serial.println("0: No Failure");
+        digitalWrite(LED_GREEN, HIGH);
         break;
       
       case 1:
         Serial.println("1: APS Failure Detected");
+        digitalWrite(LED_RED, HIGH);
         break;
       
       case 2:
         Serial.println("2: Unknown");
+        digitalWrite(LED_BLUE, HIGH);
         break;
       
       default:
@@ -78,6 +92,14 @@ static void get_time_report(float* min, float* max, float* avg)
 void setup() {
   Serial.begin(230400);
   while (!Serial);
+
+  pinMode(LED_RED, OUTPUT);
+  pinMode(LED_BLUE, OUTPUT);
+  pinMode(LED_GREEN, OUTPUT);
+  
+  digitalWrite(LED_RED, LOW);
+  digitalWrite(LED_BLUE, LOW);
+  digitalWrite(LED_GREEN, LOW);
   
   callbacks.send_data = send_data;
   callbacks.on_dataset_sample = on_dataset_sample;
